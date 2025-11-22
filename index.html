@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCA Salary Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    input { padding: 8px; font-size: 16px; width: 150px; }
+    button { padding: 10px 20px; font-size: 16px; margin-left: 10px; cursor:pointer; }
+    .result { margin-top: 30px; font-size: 18px; }
+    table { border-collapse: collapse; margin-top: 20px; }
+    td, th { border: 1px solid #aaa; padding: 8px 12px; }
+    th { background:#f2f2f2; }
+  </style>
+</head>
+<body>
+  <h2>HCA Salary Calculator</h2>
+
+  <label>Enter Current Salary: </label>
+  <input type="number" id="salaryInput" placeholder="Enter salary" step="0.01"/>
+  <button onclick="calculate()">Calculate</button>
+
+  <div id="output" class="result"></div>
+
+  <script>
+    function calculate() {
+      let salary = parseFloat(document.getElementById('salaryInput').value);
+      if (isNaN(salary) || salary <= 0) {
+        document.getElementById('output').innerHTML = "Please enter a valid salary.";
+        return;
+      }
+
+      function inc(newVal, oldVal) {
+        let diff = newVal - oldVal;
+        let pct = (diff / oldVal) * 100;
+        return `+$${diff.toFixed(2)} (${pct.toFixed(2)}%)`;
+      }
+
+      let after4 = salary * 1.04;
+      let y1 = after4 * 1.03;
+      let y2 = y1 * 1.03;
+      let y3 = y2 * 1.03;
+      let y4 = y3 * 1.03;
+
+      let finalSalary = y4;
+      let totalIncrease = finalSalary - salary;
+
+      document.getElementById('output').innerHTML = `
+        <table>
+          <tr><th>Year</th><th>Salary</th><th>Increase</th></tr>
+          <tr><td>After 4% Market Adjustment</td><td>$${after4.toFixed(2)}</td><td>${inc(after4, salary)}</td></tr>
+          <tr><td>2024/04 – 2025/03</td><td>$${y1.toFixed(2)}</td><td>${inc(y1, after4)}</td></tr>
+          <tr><td>2025/04 – 2026/03</td><td>$${y2.toFixed(2)}</td><td>${inc(y2, y1)}</td></tr>
+          <tr><td>2026/04 – 2027/03</td><td>$${y3.toFixed(2)}</td><td>${inc(y3, y2)}</td></tr>
+          <tr><td>2027/04 – 2028/03</td><td>$${y4.toFixed(2)}</td><td>${inc(y4, y3)}</td></tr>
+        </table>
+
+        <p><strong>Total Increase in Salary:</strong> $${totalIncrease.toFixed(2)}</p>
+        <p><strong>Final Salary in 2028:</strong> $${finalSalary.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
